@@ -1,0 +1,61 @@
+{% load get_item %}
+{% load multiply %}
+{% load calculate_total %}
+{% calculate_total results quantities as total %}
+{% for product in results %}
+    {% with qty=quantities|get_item:product.id %}
+        <div class="d-flex align-items-center mb-2 productItem" data-id="{{ product.id }}">
+            <div class="flex-grow-1 divProduct d-flex align-items-center px-2">
+                <img id="imgMarket" src="/{{ product.market.image }}" alt="market image">
+                <div class="ms-2">
+                    <span>{{ product.name }}</span><br>
+                    <span id="spanMarket">{{ product.market }}</span>
+                </div>
+
+                <div class="quantity">
+
+                </div>
+
+                {% if product.discount_price %}
+                    <div class="ms-auto text-end">
+                        {% if product.discount_price %}
+                            {% if product.regular_price == product.discount_price %}
+                                <span><strong>{{ qty }} x </strong></span>
+                                <span>{{ product.regular_price|multiply:product.discount_percentage|floatformat:"0" }} ден.</span>
+                                <span><strong> = {{ product.regular_price|multiply:product.discount_percentage|multiply_default:qty|floatformat:"0" }} ден.</strong></span>
+                            {% else %}
+                                <span><strong>{{ qty }} x </strong></span>
+                                <span>{{ product.discount_price }} ден.</span>
+                                <span><strong> = {{ product.discount_price|multiply_default:qty|floatformat:"0" }} ден.</strong></span>
+                            {% endif %}
+                        {% else %}
+                            <span><strong>{{ qty }} x </strong></span>
+                            <span>{{ product.regular_price }} ден.</span>
+                            <span><strong> = {{ product.regular_price|multiply_default:qty|floatformat:"0" }} ден.</strong></span>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="ms-auto text-end divPrice me-1">
+                        <span><strong>{{ qty }} x </strong></span>
+                        <span>{{ product.price }} ден.</span>
+                        <span><strong> = {{ product.price|multiply_default:qty|floatformat:"0" }} ден.</strong></span>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="divQuantity d-flex justify-content-center align-items-center ms-2">
+                <span class="decrementIcon material-symbols-outlined d-flex align-items-center justify-content-center" data-id="{{ product.id }}">remove</span>
+                <span class="mx-2 qtyText">{{ qty }}</span>
+                <span class="incrementIcon material-symbols-outlined d-flex align-items-center justify-content-center" data-id="{{ product.id }}">add</span>
+            </div>
+            <div class="divFavorite d-flex justify-content-center align-items-center ms-2">
+                <span class="material-symbols-outlined favoriteIcon toggles" data-toggle="tooltip" data-placement="top" title="Add to favorites!" data-id="{{ product.id }}">favorite</span>
+            </div>
+            <div class="divRemove d-flex justify-content-center align-items-center ms-2">
+                <span class="material-symbols-outlined removeIcon toggles" data-toggle="tooltip" data-placement="top" title="Remove item from shopping list!" data-id="{{ product.id }}">delete</span>
+            </div>
+        </div>
+    {% endwith %}
+{% endfor %}
+<div class="d-flex justify-content-end mt-5 mb-4">
+    <h5 id="totalPrice"><strong>Total: {{ total }} ден.</strong></h5>
+</div>

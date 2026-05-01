@@ -1,0 +1,44 @@
+<div class="modal-header">
+    <h5 class="modal-title">{{ product.name }}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+
+<div class="modal-body">
+    <img src="/{{ product.market.image }}" width="80" class="mb-2">
+
+    <p><strong>Market:</strong> {{ product.market }}</p>
+    <p><strong>Description:</strong> {{ product.description }}</p>
+
+    {% if product.unit_price %}
+        <p><strong>Unit price:</strong> {{ product.unit_price }} ден.</p>
+    {% endif %}
+
+    {% if product.discount_price %}
+        <p>
+            <s>Regular price: {{ product.regular_price }} ден.</s><br>
+            <p class="text-danger fw-bold">Discount: {{ product.discount_price }} ден. (-{{ product.discount_percentage }}%)</p>
+        </p>
+
+        <p><strong>Discount type:</strong> {{ product.discount_type }}</p>
+
+        {% if product.discount_date_from %}
+            <p><strong>Discount from: </strong> {{ product.discount_date_from }}</p>
+        {% endif %}
+
+        {% if product.discount_date_to %}
+            <p class="d-flex align-items-center gap-1"><strong>Discount until: </strong> {{ product.discount_date_to }}
+                {% if product.is_ending_soon %}
+                    <span class="text-danger ms-1 dangerText">! ! !</span>
+                {% endif %}
+            </p>
+        {% endif %}
+    {% else %}
+        <p><strong>{{ product.price }} ден.</strong></p>
+    {% endif %}
+
+    {% if product.availability %}
+        <p><strong class="d-flex align-items-center gap-1">Available? Yes <span class="material-symbols-outlined">check</span></strong></p>
+    {% else %}
+        <p><strong class="d-flex align-items-center gap-1">Available? No <span class="material-symbols-outlined">close</span></strong></p>
+    {% endif %}
+</div>

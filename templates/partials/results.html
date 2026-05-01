@@ -1,0 +1,45 @@
+{% load multiply %}
+{% for product in results %}
+    {% if product.availability %}
+            <div class="d-flex align-items-center mb-2 productItem" data-id="{{ product.id }}">
+                <div class="flex-grow-1 divProduct d-flex align-items-center px-2">
+                    <img id="imgMarket" src="/{{ product.market.image }}" alt="market image">
+                    <div class="ms-2">
+                        <span>{{ product.name }}</span><br>
+                        <span id="spanMarket">{{ product.market }}</span>
+                    </div>
+
+                    {% if product.discount_price %}
+                        <div class="ms-auto text-end me-2">
+                            {% if product.regular_price == product.discount_price %}
+                                <span id="discountedPrice"><s>{{ product.regular_price|multiply:product.discount_percentage|floatformat:"0" }} ден.</s></span><br>
+                            {% else %}
+                                <span id="discountedPrice"><s>{{ product.regular_price }} ден.</s></span><br>
+                            {% endif %}
+                            <span>{{ product.discount_price }} ден.</span>
+
+                            {% if product.discount_percentage < 0 %}
+                                <span>({{ product.discount_percentage }}%)</span>
+                            {% else %}
+                                <span>(-{{ product.discount_percentage }}%)</span>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <div class="ms-auto text-end divPrice">
+                            <span>{{ product.price }} ден.</span>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="divFavorite d-flex justify-content-center align-items-center ms-2">
+                    <span class="material-symbols-outlined favoriteIcon toggles" data-toggle="tooltip" data-placement="top" title="Add to favorites!" data-id="{{ product.id }}">favorite</span>
+                </div>
+                <div class="divShoppingList d-flex justify-content-center align-items-center ms-2">
+                    <span class="material-symbols-outlined shoppingListIcon toggles" data-toggle="tooltip" data-placement="top" title="Add to shopping list!" data-id="{{ product.id }}">list_alt_add</span>
+                </div>
+            </div>
+    {% endif %}
+{% empty %}
+    <div class="container d-flex justify-content-center">
+        <p>Type something in the search bar to show products!</p>
+    </div>
+{% endfor %}

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Discounty</title>
+    <script src="{% static 'bootstrap-5.3.8-dist/js/bootstrap.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'favorites.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap-5.3.8-dist/css/bootstrap.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.2/themes/base/jquery-ui.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+IE:wght@100..400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=call,check,close,dark_mode,delete,distance,exclamation,favorite,fax,home,info,list_alt,list_alt_add,location_city,location_on,search,shopping_cart,stars_2,update"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <header class="d-flex flex-wrap align-items-center position-relative">
+        <a id="discounty_logo" href="{% url 'index' %}" class="d-flex align-items-center col-md-3 mt-2 mb-3 ms-3 text-decoration-none">
+            Discounty
+        </a>
+
+        <ul class="nav col-12 col-md-auto justify-content-center align-items-center mb-md-0 header-buttons position-absolute top-50 start-50 translate-middle" id="header">
+            <li><a href="{% url 'index' %}" class="nav-link px-2 header_links d-flex align-items-center gap-1"><span class="material-symbols-outlined headerIcons">home</span><span>Home</span></a></li>
+            <li><a href="{% url 'markets' %}" class="ms-2 nav-link px-2 header_links d-flex align-items-center gap-1"><span class="material-symbols-outlined headerIcons">shopping_cart</span><span>Markets</span></a></li>
+            <li><a href="{% url 'shopping-list' %}" class="ms-2 nav-link px-2 header_links d-flex align-items-center gap-1"><span class="material-symbols-outlined headerIcons">list_alt</span><span>Shopping List</span></a></li>
+            <li><a href="{% url 'favorites' %}" class="ms-2 nav-link px-2 header_links d-flex align-items-center gap-1"><span class="material-symbols-outlined headerIcons">favorite</span><span>Favorites</span></a></li>
+            <li><a href="{% url 'deals' %}" class="ms-2 nav-link px-2 header_links d-flex align-items-center gap-1"><span class="material-symbols-outlined headerIcons">stars_2</span><span>Deals</span></a></li>
+            <li><a href="{% url 'about' %}" class="ms-2 nav-link px-2 header_links d-flex align-items-center gap-1"><span class="material-symbols-outlined headerIcons">info</span><span>About</span></a></li>
+        </ul>
+        <button id="darkModeToggle" class="btn btn-outline-light position-absolute end-0 top-50 translate-middle-y me-5 d-flex align-items-center justify-content-center"><span class="material-symbols-outlined">dark_mode</span></button>
+    </header>
+
+    <div class="container mt-4 mb-4">
+        <div id="favoritesResults"></div>
+    </div>
+
+    <div class="modal fade" id="productModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content" id="modalContent">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade mb-3" id="shoppingListModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content" id="shoppingListContent">
+
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container mt-5">
+            <div class="row align-items-center">
+                <hr>
+                <div class="col-md-6">
+                    <p id="footerDiscounty" class="ms-5"><a href="{% url 'index' %}">Discounty</a></p>
+                </div>
+                <div class="col-md-6">
+                    <p class="d-flex align-items-center"><span class="material-symbols-outlined">distance</span><span class="ms-2">ул. Улица Улица бр. 16, Пoштенски Фах 123, 1000, <br>Скопје, Република Северна Македонија </span></p>
+                    <p class="d-flex align-items-center"><span class="material-symbols-outlined">call</span><span class="ms-2">(+389) 123-456-789</span><span class="material-symbols-outlined ms-5">fax</span><span class="ms-2">(+389) 123-456-789</span></p>
+                    <p class="d-flex align-items-center"><span>Social media: </span><a href="#" class="ms-2 fa fa-facebook"></a>
+                        <a href="#" class="fa fa-twitter"></a>
+                        <a href="#" class="fa fa-google"></a>
+                        <a href="#" class="fa fa-linkedin"></a>
+                        <a href="#" class="fa fa-youtube"></a>
+                        <a href="#" class="fa fa-instagram"></a>
+                        <a href="#" class="fa fa-pinterest"></a>
+                        <a href="#" class="fa fa-snapchat-ghost"></a>
+                        <a href="#" class="fa fa-vimeo"></a>
+                        <a href="#" class="fa fa-tumblr"></a>
+                        <a href="#" class="fa fa-reddit"></a>
+                        <a href="#" class="fa fa-rss"></a>
+                    </p>
+                </div>
+                <hr>
+            </div>
+            <div class="row">
+                <div class="col-md-6 d-flex justify-content-between">
+                    <a href="{% url 'about' %}"><span>ABOUT US</span></a>
+                    <a href="#"><span>CONTACT US</span></a>
+                    <a href="#"><span>HELP</span></a>
+                    <a href="#"><span>PRIVACY POLICY</span></a>
+                    <a href="#"><span>DISCLAIMER</span></a>
+                </div>
+                <div class="col-md-6 text-end">
+                    <p>Copyright &copy; 2026 - Stefan Todorovski</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'favorites.js' %}"></script>
+</body>
+</html>

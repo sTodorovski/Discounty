@@ -1,0 +1,393 @@
+html, body {
+    margin: 0;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background-color: #AC4747;
+    padding: 20px;
+    color: #F7F2EB;
+}
+
+#discounty_logo {
+    color: #F7F2EB !important;
+    font-size: 40px;
+    font-family: "Playwrite IE", cursive;
+}
+
+.header_links {
+    color: #F7F2EB !important;
+    font-family: "Quicksand", sans-serif;
+    font-size: 23px;
+}
+
+footer {
+    background-color: #AC4747;
+    color: white;
+    margin-top: auto;
+    font-family: "Quicksand", sans-serif;
+}
+
+#discountedPrice {
+    color: red;
+}
+
+#imgMarket {
+    width: 50px;
+    border-radius: 100%;
+}
+
+.divProduct {
+    border-radius: 50px;
+    border: 2px solid #E3E3E3;
+    box-shadow: 3px 3px #F2F2F2;
+    height: 65px;
+    transition: box-shadow 0.25s, background-color 0.25s, border 0.25s, color 0.25s;
+}
+
+.divFavorite {
+    border-radius: 50px;
+    border: 2px solid #E3E3E3;
+    box-shadow: 3px 3px #F2F2F2;
+    height: 65px;
+    width: 65px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.divShoppingList {
+    border-radius: 50px;
+    border: 2px solid #E3E3E3;
+    box-shadow: 3px 3px #F2F2F2;
+    height: 65px;
+    width: 65px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.divPrice {
+    padding-left: 30px;
+    text-align: end;
+}
+
+.favoriteIcon {
+    font-size: 28px;
+    color: gray;
+    transition: color 0.25s;
+}
+
+.favoriteIcon.filled,
+.favoriteIcon:hover {
+    color: red;
+}
+
+.shoppingListIcon {
+    font-size: 28px;
+    color: gray;
+    transition: color 0.25s;
+}
+
+.shoppingListIcon.filled,
+.shoppingListIcon:hover {
+    color: #f98600;
+}
+
+.divProduct:hover {
+    box-shadow: 3px 3px #D8D8D8;
+    background-color: #FAFAFA;
+    border: 2px solid #DEDEDE;
+    color: black;
+}
+
+#spanMarket {
+    opacity: 0.7;
+    font-size: 15px;
+}
+
+#searchForm {
+    display: flex;
+    align-items: center;
+    padding: 17px;
+    border-radius: 65px;
+    background: #F6F6F6;
+    transition: box-shadow 0.25s;
+    width: 800px;
+}
+
+#searchInput {
+    font-size: 18px;
+    color: #333333;
+    margin-left: 14px;
+    font-family: "Lexend", sans-serif;
+    outline: none;
+    border: none;
+    background: transparent;
+    width: 600px;
+}
+
+#searchForm:focus-within {
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.75);
+}
+
+#searchInput::placeholder, #magnifyingGlass {
+    color: rgba(0, 0, 0, 0.25)
+}
+
+#selectSort {
+    width: 200px;
+}
+
+#selectMarket {
+    width: 200px;
+}
+
+body.dark-mode header,
+body.dark-mode footer {
+    background-color: #1e1e1e;
+}
+
+body.dark-mode .shoppingListIcon.filled {
+    color: #ff9f2d;
+}
+
+body.dark-mode .card {
+    background-color: #1e1e1e;
+    color: #ffffff;
+}
+
+body.dark-mode input,
+body.dark-mode select  {
+    background-color: #2a2a2a;
+    color: white;
+    border: 1px solid #444;
+}
+
+body.dark-mode .discountBtn  {
+    color: white !important;
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+}
+
+body.dark-mode .divFavorite,
+body.dark-mode .divProduct,
+body.dark-mode .divShoppingList {
+    border: 2px solid #3B3B3B;
+    box-shadow: 3px 3px #3B3B3B;
+}
+
+body.dark-mode .discountBtn.active {
+    color: black;
+    background-color: white;
+}
+
+html.dark-mode,
+body.dark-mode {
+    background: linear-gradient(135deg, #121212, #1e1e1e);
+    color: #f1f1f1;
+}
+
+body.dark-mode .modal-content {
+    background-color: #1e1e1e;
+    color: white;
+}
+
+body.dark-mode .modal-header {
+    border-bottom: 1px solid #444;
+}
+
+body.dark-mode .modal-body {
+    color: #ddd;
+}
+
+body.dark-mode .btn-close {
+    filter: invert(1);
+}
+
+.discountBtn.active,
+.discountBtn:hover{
+    background-color: #dc3545 !important;
+    color: white !important;
+}
+
+.fa {
+  padding: 7px;
+  font-size: 30px;
+  width: 30px;
+  text-align: center;
+  text-decoration: none;
+  margin: 5px 2px;
+  border-radius: 50%;
+}
+
+.fa:hover {
+    opacity: 0.7;
+}
+
+.fa-facebook {
+  background: #3B5998;
+  color: white;
+}
+
+.fa-twitter {
+  background: #55ACEE;
+  color: white;
+}
+
+.fa-google {
+  background: #dd4b39;
+  color: white;
+}
+
+.fa-linkedin {
+  background: #007bb5;
+  color: white;
+}
+
+.fa-youtube {
+  background: #bb0000;
+  color: white;
+}
+
+.fa-instagram {
+  background: #125688;
+  color: white;
+}
+
+.fa-pinterest {
+  background: #cb2027;
+  color: white;
+}
+
+.fa-snapchat-ghost {
+  background: #fffc00;
+  color: white;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+.fa-skype {
+  background: #00aff0;
+  color: white;
+}
+
+.fa-android {
+  background: #a4c639;
+  color: white;
+}
+
+.fa-dribbble {
+  background: #ea4c89;
+  color: white;
+}
+
+.fa-vimeo {
+  background: #45bbff;
+  color: white;
+}
+
+.fa-tumblr {
+  background: #2c4762;
+  color: white;
+}
+
+.fa-vine {
+  background: #00b489;
+  color: white;
+}
+
+.fa-foursquare {
+  background: #45bbff;
+  color: white;
+}
+
+.fa-stumbleupon {
+  background: #eb4924;
+  color: white;
+}
+
+.fa-flickr {
+  background: #f40083;
+  color: white;
+}
+
+.fa-yahoo {
+  background: #430297;
+  color: white;
+}
+
+.fa-soundcloud {
+  background: #ff5500;
+  color: white;
+}
+
+.fa-reddit {
+  background: #ff5700;
+  color: white;
+}
+
+.fa-rss {
+  background: #ff6600;
+  color: white;
+}
+
+body.dark-mode .fa-facebook,
+body.dark-mode .fa-twitter,
+body.dark-mode .fa-google,
+body.dark-mode .fa-linkedin,
+body.dark-mode .fa-youtube,
+body.dark-mode .fa-instagram,
+body.dark-mode .fa-pinterest,
+body.dark-mode .fa-snapchat-ghost,
+body.dark-mode .fa-vimeo,
+body.dark-mode .fa-tumblr,
+body.dark-mode .fa-reddit,
+body.dark-mode .fa-rss {
+    background-color: #1e1e1e;
+}
+
+footer a {
+    text-decoration: none;
+    color: white;
+}
+
+#header {
+    font-size: 20px;
+}
+
+hr {
+    height: 2px;
+    background-color: white;
+}
+
+#footerDiscounty {
+    font-size: 65px;
+    font-family: "Playwrite IE", cursive;
+}
+
+#darkModeToggle {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    border-width: 2px;
+}
+
+.discountBtn {
+    color: black !important;
+}
+
+.headerIcons {
+    font-size: 26px !important;
+}
+
+.dangerText {
+    font-size: 25px;
+    font-weight: bold;
+}

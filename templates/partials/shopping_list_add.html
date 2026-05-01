@@ -1,0 +1,14 @@
+<div class="modal-header">
+    <h5 class="modal-title">Add to Shopping List</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+
+<div class="modal-body text-center">
+    <p><strong>{{ product.name }}</strong></p>
+
+    <input type="number" id="quantityInput" class="form-control" value="1" min="1">
+
+    <button class="btn btn-primary mt-3" id="addToListBtn" data-id="{{ product.id }}">
+        Add
+    </button>
+</div>
