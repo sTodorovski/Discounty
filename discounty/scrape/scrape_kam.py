@@ -47,8 +47,7 @@ def scrape_kam():
     image_path = os.path.join(settings.MEDIA_ROOT, "markets", "kam.jpg")
 
     if os.path.exists(image_path):
-        with open(image_path, "rb") as f:
-            market.image.save("kam.jpg", File(f), save=False)
+        market.image.name = "markets/kam.jpg"
 
     market.save()
 

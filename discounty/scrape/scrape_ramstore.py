@@ -28,7 +28,7 @@ def scrape_ramstore():
     driver = webdriver.Firefox(options=options)
 
     try:
-        driver.get("https://ramstore.com.mk/marketi/ramstore-tetovo/")
+        driver.get("https://ramstore.com.mk/marketi/ramstore-tetovo-3/")
         print("Scraping from: ", driver.title)
 
         text = driver.title
@@ -55,8 +55,7 @@ def scrape_ramstore():
         image_path = os.path.join(settings.MEDIA_ROOT, "markets", "ramstore.jpg")
 
         if os.path.exists(image_path):
-            with open(image_path, "rb") as f:
-                market.image.save("ramstore.jpg", File(f), save=False)
+            market.image.name = "markets/ramstore.jpg"
 
         market.save()
 

@@ -62,7 +62,7 @@
         </div>
 
         <div class="col-md-4 text-center mt-3">
-            <img src="/{{ market.image }}" class="img-fluid rounded" alt="market image" id="marketImg">
+            <img src="/media/{{ market.image }}" class="img-fluid rounded" alt="market image" id="marketImg">
         </div>
 
     </div>
@@ -90,7 +90,7 @@
                     {% load multiply %}
                         <div class="d-flex align-items-center mb-2 productItem" data-id="{{ product.id }}">
                         <div class="flex-grow-1 divProduct d-flex align-items-center px-2">
-                            <img id="imgMarket" src="/{{ product.market.image }}" alt="market image">
+                            <img id="imgMarket" src="/media/{{ product.market.image }}" alt="market image">
                             <div class="ms-2">
                                 <span>{{ product.name }}</span><br>
                                 <span id="spanMarket">{{ product.market }}</span>

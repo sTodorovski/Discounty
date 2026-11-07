@@ -1,4 +1,6 @@
 import time
+import traceback
+
 from django.core.management import BaseCommand
 from discounty.scrape.scrape_dim import scrape_dim
 from discounty.scrape.scrape_elida import scrape_elida
@@ -6,7 +8,9 @@ from discounty.scrape.scrape_kam import scrape_kam
 from discounty.scrape.scrape_kipper import scrape_kipper
 from discounty.scrape.scrape_kitgo import scrape_kitgo
 from discounty.scrape.scrape_konto import scrape_konto
+from discounty.scrape.scrape_oaza import scrape_oaza
 from discounty.scrape.scrape_ramstore import scrape_ramstore
+from discounty.scrape.scrape_spar import scrape_spar
 from discounty.scrape.scrape_stokomak import scrape_stokomak
 from discounty.scrape.scrape_tinex import scrape_tinex
 from discounty.scrape.scrape_vero import scrape_vero
@@ -22,17 +26,19 @@ class Command(BaseCommand):
 
         scrapers = [
             scrape_kam,
+            scrape_oaza,
             scrape_kipper,
             scrape_elida,
             scrape_stokomak,
             scrape_dim,
-            scrape_tinex,
+            # scrape_tinex,
             scrape_zur,
-            scrape_konto,
+            # scrape_konto,
             scrape_zito,
             scrape_ramstore,
             scrape_vero,
-            scrape_kitgo,
+            # scrape_kitgo,
+            scrape_spar,
         ]
 
         success = 0
@@ -42,8 +48,10 @@ class Command(BaseCommand):
             try:
                 scraper()
                 success += 1
-            except:
+            except Exception as e:
                 failed += 1
+                self.stderr.write(f"FAILED: {scraper.__name__}: {e}")
+                traceback.print_exc()
 
         end_time = time.time()
         duration = end_time - start_time

@@ -76,8 +76,7 @@ def scrape_dim():
         image_path = os.path.join(settings.MEDIA_ROOT, "markets", "dim.jpg")
 
         if os.path.exists(image_path):
-            with open(image_path, "rb") as f:
-                market.image.save("dim.jpg", File(f), save=False)
+            market.image.name = "markets/dim.jpg"
 
         market.save()
 

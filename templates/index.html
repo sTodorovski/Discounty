@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="en">
 <head>
     {% load static %}
@@ -49,8 +49,16 @@
             <option value="price_desc">Price (desc.)</option>
             <option value="discount_desc">Discount %</option>
         </select>
+
+        <select id="categories" class="form-select ms-2" style="width: 200px;" name="category">
+            <option value="">All categories</option>
+            {% for description in categories %}
+                <option value="{{ description }}">{{ description }}</option>
+            {% endfor %}
+        </select>
+
         <select id="selectMarket" name="market" class="form-select ms-2 me-2" style="width: 200px;">
-            <option value="">All Markets</option>
+            <option value="">All markets</option>
             {% for market in market_list %}
                 <option value="{{ market.id }}">
                     {{ market.name }}

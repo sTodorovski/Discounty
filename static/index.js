@@ -147,6 +147,7 @@ function initSearch() {
     const resultsContainer = document.getElementById('searchResults');
     const sortSelect = document.querySelector("select[name='sort']");
     const marketSelect = document.querySelector("select[name='market']");
+    const categorySelect = document.getElementById('categories');
 
     if (!input || !resultsContainer) return;
 
@@ -160,11 +161,11 @@ function initSearch() {
     let market = marketSelect?.value || '';
     let discount = '';
 
-    function load(reset = false) {
+    function load(reset = false, updateCategories = false) {
         if (loading || !hasNext) return;
         loading = true;
 
-        fetch(`/ajax/search-products/?search=${query}&page=${page}&sort=${sort}&market=${market}&discount=${discount}`)
+        fetch(`/ajax/search-products/?search=${encodeURIComponent(query)}&page=${page}&sort=${sort}&market=${market}&discount=${discount}&category=${encodeURIComponent(categorySelect ? categorySelect.value : '')}`)
             .then(r => r.json())
             .then(data => {
                 resultsContainer.innerHTML = reset
@@ -173,6 +174,17 @@ function initSearch() {
 
                 applyFavorites();
                 applyShoppingListIcons();
+
+                if (updateCategories && categorySelect && data.categories) {
+                    categorySelect.innerHTML = '<option value="">All categories</option>';
+
+                    data.categories.forEach(description => {
+                        const option = document.createElement('option');
+                        option.value = description;
+                        option.textContent = description;
+                        categorySelect.appendChild(option);
+                    });
+                }
 
                 hasNext = data.has_next;
                 loading = false;
@@ -199,10 +211,23 @@ function initSearch() {
 
     marketSelect?.addEventListener('change', () => {
         market = marketSelect.value;
+
+        if (categorySelect) {
+            categorySelect.value = '';
+        }
+
         page = 1;
         hasNext = true;
-        load(true);
+        load(true, true);
     });
+
+    if (categorySelect) {
+        categorySelect.addEventListener('change', () => {
+            page = 1;
+            hasNext = true;
+            load(true);
+        });
+    }
 
     document.addEventListener('click', (e) => {
         const btn = e.target.closest('.discountBtn');

@@ -24,4 +24,7 @@ urlpatterns = [
 
 ]
 
-urlpatterns += static('/images/', document_root=settings.BASE_DIR / 'images')
+# urlpatterns += static('/images/', document_root=settings.BASE_DIR / 'images')
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

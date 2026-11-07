@@ -72,8 +72,7 @@ def scrape_konto():
         image_path = os.path.join(settings.MEDIA_ROOT, "markets", "konto.jpg")
 
         if os.path.exists(image_path):
-            with open(image_path, "rb") as f:
-                market.image.save("konto.jpg", File(f), save=False)
+            market.image.name = "markets/konto.jpg"
 
         market.save()
 

@@ -1,3 +1,4 @@
+
 let productToRemove = null;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -7,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initProductModal();
 });
 
-// dark mode
+// Dark mode
 function initDarkMode() {
     const toggleBtn = document.getElementById('darkModeToggle');
     const savedMode = localStorage.getItem('darkMode');
@@ -20,17 +21,14 @@ function initDarkMode() {
 
     toggleBtn.addEventListener('click', () => {
         document.body.classList.toggle('dark-mode');
-
-        localStorage.setItem(
-            'darkMode',
-            document.body.classList.contains('dark-mode') ? 'enabled' : 'disabled'
-        );
+        localStorage.setItem('darkMode', document.body.classList.contains('dark-mode') ? 'enabled' : 'disabled');
     });
 }
 
+// Favorites
 function getFavorites() {
     try {
-        return JSON.parse(localStorage.getItem('favorites')) || [];
+        return (JSON.parse(localStorage.getItem('favorites')) || []).map(id => String(id));
     } catch {
         return [];
     }
@@ -44,37 +42,19 @@ function applyFavorites() {
     const favorites = getFavorites();
 
     document.querySelectorAll('.favoriteIcon').forEach(icon => {
-        const id = icon.dataset.id;
+        const productId = String(icon.dataset.id);
+        const isFavorite = favorites.includes(productId);
 
-        if (favorites.includes(id)) {
-            icon.classList.add('filled');
-        } else {
-            icon.classList.remove('filled');
-        }
+        icon.classList.toggle('filled', isFavorite);
+        icon.title = isFavorite ? 'Remove from favorites!' : 'Add to favorites!';
     });
 }
 
 function initFavorites() {
     applyFavorites();
-
-    document.addEventListener('click', (e) => {
-        const icon = e.target.closest('.favoriteIcon');
-        if (!icon) return;
-
-        const id = icon.dataset.id;
-        let favorites = getFavorites();
-
-        if (favorites.includes(id)) {
-            favorites = favorites.filter(x => x !== id);
-        } else {
-            favorites.push(id);
-        }
-
-        saveFavorites(favorites);
-        applyFavorites();
-    });
 }
 
+// Shopping page
 function initShoppingPage() {
     loadShoppingList();
 
@@ -92,113 +72,148 @@ function loadShoppingList() {
     const ids = Object.keys(list);
 
     if (ids.length === 0) {
-        container.innerHTML = "<p>Your shopping list is empty.</p>";
+        container.innerHTML = '<p>Your shopping list is empty.</p>';
         return;
     }
 
     fetch(`/shopping-list-data/?ids=${ids.join(',')}&quantities=${encodeURIComponent(JSON.stringify(list))}`)
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok) throw new Error('Failed to load shopping list.');
+            return res.json();
+        })
         .then(data => {
             container.innerHTML = data.html;
             applyFavorites();
-        });
+        })
+        .catch(error => console.error('Error loading shopping list:', error));
 }
 
 function exportList() {
     const list = getShoppingList();
     const ids = Object.keys(list);
 
-    window.location.href =
-        `/export-shopping-list/?ids=${ids.join(',')}&quantities=${encodeURIComponent(JSON.stringify(list))}`;
+    if (ids.length === 0) {
+        alert('Your shopping list is empty.');
+        return;
+    }
+
+    window.location.href = `/export-shopping-list/?ids=${ids.join(',')}&quantities=${encodeURIComponent(JSON.stringify(list))}`;
 }
 
 function sendEmail() {
-    const email = document.getElementById('emailInput').value;
+    const emailInput = document.getElementById('emailInput');
+    const email = emailInput?.value.trim();
 
     if (!email) {
-        alert("Please enter an email");
+        alert('Please enter an email.');
         return;
     }
 
     const list = getShoppingList();
     const ids = Object.keys(list);
 
-    fetch(`/email-shopping-list/?ids=${ids.join(',')}&quantities=${encodeURIComponent(JSON.stringify(list))}&email=${email}`)
-        .then(res => res.json())
+    fetch(`/email-shopping-list/?ids=${ids.join(',')}&quantities=${encodeURIComponent(JSON.stringify(list))}&email=${encodeURIComponent(email)}`)
+        .then(res => {
+            if (!res.ok) throw new Error('Failed to send shopping list.');
+            return res.json();
+        })
         .then(data => {
             const toastEl = document.getElementById('emailToast');
             const toastBody = document.getElementById('emailToastBody');
 
+            if (!toastEl || !toastBody) return;
+
             if (data.success) {
-                toastBody.textContent = "Email sent successfully!";
+                toastBody.textContent = 'Email sent successfully!';
                 toastEl.classList.remove('text-bg-danger');
                 toastEl.classList.add('text-bg-success');
             } else {
-                toastBody.textContent = "Error sending email";
+                toastBody.textContent = 'Error sending email.';
                 toastEl.classList.remove('text-bg-success');
                 toastEl.classList.add('text-bg-danger');
             }
 
-            new bootstrap.Toast(toastEl).show();
+            bootstrap.Toast.getOrCreateInstance(toastEl).show();
             bootstrap.Modal.getInstance(document.getElementById('emailModal'))?.hide();
-            document.getElementById('emailInput').value = '';
-        });
+
+            if (emailInput) emailInput.value = '';
+        })
+        .catch(error => console.error('Error sending shopping list:', error));
 }
 
 function handleClicks(e) {
+    console.log('shopping-list.js handleClicks fired');
+    const target = e.target instanceof Element ? e.target : e.target.parentElement;
+    if (!target) return;
 
-    const fav = e.target.closest('.favoriteIcon');
-    if (fav) {
-        toggleFavorite(fav);
+    // Match the behavior in favorites.js: remove the ID, save, and refresh the UI.
+    const favIcon = target.closest('.favoriteIcon');
+
+    if (favIcon) {
+        console.log('Existing handler found heart:', favIcon.dataset.id);
+        e.preventDefault();
+        e.stopPropagation();
+
+        const productId = String(favIcon.dataset.id);
+        let favorites = getFavorites();
+
+        if (favorites.includes(productId)) {
+            favorites = favorites.filter(id => id !== productId);
+        } else {
+            favorites.push(productId);
+        }
+
+        saveFavorites(favorites);
+        applyFavorites();
         return;
     }
 
-    const remove = e.target.closest('.removeIcon');
+    const remove = target.closest('.removeIcon');
+
     if (remove) {
         productToRemove = remove.dataset.id;
-        new bootstrap.Modal(document.getElementById('removeModal')).show();
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('removeModal')).show();
         return;
     }
 
-    if (e.target.id === 'confirmRemoveBtn') {
-        removeProduct(productToRemove);
+    if (target.closest('#confirmRemoveBtn')) {
+        if (productToRemove !== null) {
+            removeProduct(productToRemove);
+        }
         return;
     }
 
-    const inc = e.target.closest('.incrementIcon');
+    const inc = target.closest('.incrementIcon');
+
     if (inc) {
-        updateQty(inc.dataset.id, +1);
+        updateQty(inc.dataset.id, 1);
         return;
     }
 
-    const dec = e.target.closest('.decrementIcon');
+    const dec = target.closest('.decrementIcon');
+
     if (dec) {
         updateQty(dec.dataset.id, -1);
         return;
     }
 
-    if (
-        e.target.closest('.favoriteIcon') ||
-        e.target.closest('.shoppingListIcon') ||
-        e.target.closest('.removeIcon') ||
-        e.target.closest('.divQuantity') ||
-        e.target.closest('.divFavorite') ||
-        e.target.closest('.divRemove')
-    ) return;
+    // Don't open the product modal when interacting with controls.
+    if (target.closest('.shoppingListIcon, .divQuantity, .divFavorite, .divRemove')) return;
 
-    const product = e.target.closest('.productItem');
+    const product = target.closest('.productItem');
+
     if (product) {
-        fetch(`/product/${product.dataset.id}/`)
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById('modalContent').innerHTML = data.html;
-                new bootstrap.Modal(document.getElementById('productModal')).show();
-            });
+        openProductModal(product.dataset.id);
     }
 }
 
+// Shopping-list storage
 function getShoppingList() {
-    return JSON.parse(localStorage.getItem('shoppingList')) || {};
+    try {
+        return JSON.parse(localStorage.getItem('shoppingList')) || {};
+    } catch {
+        return {};
+    }
 }
 
 function saveShoppingList(list) {
@@ -206,13 +221,13 @@ function saveShoppingList(list) {
 }
 
 function updateQty(id, change) {
-    let list = getShoppingList();
+    const list = getShoppingList();
 
     list[id] = (list[id] || 0) + change;
 
     if (list[id] <= 0) {
         productToRemove = id;
-        new bootstrap.Modal(document.getElementById('removeModal')).show();
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('removeModal')).show();
         return;
     }
 
@@ -221,55 +236,36 @@ function updateQty(id, change) {
 }
 
 function removeProduct(id) {
-    let list = getShoppingList();
+    const list = getShoppingList();
     delete list[id];
 
     saveShoppingList(list);
 
     bootstrap.Modal.getInstance(document.getElementById('removeModal'))?.hide();
+    productToRemove = null;
+
     loadShoppingList();
 }
 
-function toggleFavorite(icon) {
-    const id = icon.dataset.id;
-    let favorites = getFavorites();
-
-    if (favorites.includes(id)) {
-        favorites = favorites.filter(x => x !== id);
-        icon.classList.remove('filled');
-    } else {
-        favorites.push(id);
-        icon.classList.add('filled');
-    }
-
-    saveFavorites(favorites);
+// Product modal
+function initProductModal() {
+    // Product-card clicks are handled by handleClicks().
 }
 
-function initProductModal() {
-    document.addEventListener('click', (e) => {
-        if (
-            e.target.closest('.favoriteIcon') ||
-            e.target.closest('.shoppingListIcon') ||
-            e.target.closest('.divFavorite') ||
-            e.target.closest('.divShoppingList') ||
-            e.target.closest('.discountBtn')
-        ) {
-            return;
-        }
+function openProductModal(id) {
+    fetch(`/product/${id}/`)
+        .then(res => {
+            if (!res.ok) throw new Error('Failed to load product details.');
+            return res.json();
+        })
+        .then(data => {
+            const modalContent = document.getElementById('modalContent');
+            const modalElement = document.getElementById('productModal');
 
-        const product = e.target.closest('.productItem');
-        if (!product) return;
+            if (!modalContent || !modalElement) return;
 
-        const id = product.dataset.id;
-
-        fetch(`/product/${id}/`)
-            .then(r => r.json())
-            .then(data => {
-                document.getElementById('modalContent').innerHTML = data.html;
-
-                new bootstrap.Modal(
-                    document.getElementById('productModal')
-                ).show();
-            });
-    });
+            modalContent.innerHTML = data.html;
+            bootstrap.Modal.getOrCreateInstance(modalElement).show();
+        })
+        .catch(error => console.error('Error loading product details:', error));
 }

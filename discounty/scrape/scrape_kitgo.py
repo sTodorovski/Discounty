@@ -80,8 +80,7 @@ def scrape_kitgo():
         image_path = os.path.join(settings.MEDIA_ROOT, "markets", "kitgo.jpg")
 
         if os.path.exists(image_path):
-            with open(image_path, "rb") as f:
-                market.image.save("kitgo.jpg", File(f), save=False)
+            market.image.name = "markets/kitgo.jpg"
 
         market.save()
 

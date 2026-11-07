@@ -66,8 +66,7 @@ def scrape_zito():
         image_path = os.path.join(settings.MEDIA_ROOT, "markets", "zito.jpg")
 
         if os.path.exists(image_path):
-            with open(image_path, "rb") as f:
-                market.image.save("zito.jpg", File(f), save=False)
+            market.image.name = "markets/zito.jpg"
 
         market.save()
 
@@ -153,6 +152,8 @@ def scrape_zito():
                 WebDriverWait(driver, 15).until(
                     EC.staleness_of(old_table)
                 )
+
+                time.sleep(0.3)
             except:
                 has_next = False
 

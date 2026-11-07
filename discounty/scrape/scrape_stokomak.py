@@ -76,8 +76,7 @@ def scrape_stokomak():
         image_path = os.path.join(settings.MEDIA_ROOT, "markets", "stokomak.jpg")
 
         if os.path.exists(image_path):
-            with open(image_path, "rb") as f:
-                market.image.save("stokomak.jpg", File(f), save=False)
+            market.image.name = "markets/stokomak.jpg"
 
         market.save()
 

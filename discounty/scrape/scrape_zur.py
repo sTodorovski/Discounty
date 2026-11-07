@@ -74,8 +74,7 @@ def scrape_zur():
         image_path = os.path.join(settings.MEDIA_ROOT, "markets", "zur.jpg")
 
         if os.path.exists(image_path):
-            with open(image_path, "rb") as f:
-                market.image.save("zur.jpg", File(f), save=False)
+            market.image.name = "markets/zur.jpg"
 
         market.save()
 
@@ -169,6 +168,8 @@ def scrape_zur():
                 WebDriverWait(driver, 15).until(
                     EC.staleness_of(old_table)
                 )
+
+                time.sleep(0.3)
             except:
                 has_next = False
 

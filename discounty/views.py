@@ -17,6 +17,7 @@ def index(request):
     product_list = Product.objects.all()
     query = request.GET.get('search')
     sort = request.GET.get('sort')
+    categories = Product.objects.values_list('description', flat=True).distinct().order_by('description')
     results = []
 
     if query:
@@ -33,7 +34,7 @@ def index(request):
         elif sort == 'discount_desc':
             results = results.order_by('-discount_percentage')
 
-    return render(request, 'index.html', {'market_list': market_list , 'product_list': product_list, 'results': results, 'query': query})
+    return render(request, 'index.html', {'market_list': market_list , 'product_list': product_list, 'results': results, 'query': query, 'categories': categories})
 
 def markets(request):
     market_list = Market.objects.all()
@@ -45,14 +46,33 @@ def ajax_search_products(request):
     sort = request.GET.get('sort')
     market_id = request.GET.get('market')
     discount = request.GET.get('discount')
+    category = request.GET.get('category')
 
     if query:
-        results = Product.objects.filter(name__icontains=query)
+        search_words = query.split()
+        search_filter = Q()
+
+        for word in search_words:
+            search_filter &= Q(name__icontains=word)
+
+        results = Product.objects.filter(search_filter)
     else:
         results = Product.objects.order_by('-id')
 
     if market_id:
         results = results.filter(market_id=market_id)
+
+    category_products = Product.objects.all()
+
+    if market_id:
+        category_products = category_products.filter(market_id=market_id)
+
+    categories = category_products.values_list(
+        'description', flat=True
+    ).distinct().order_by('description')
+
+    if category:
+       results = results.filter(description=category)
 
     if discount:
         try:
@@ -86,7 +106,8 @@ def ajax_search_products(request):
 
     return JsonResponse({
         'html': html,
-        'has_next': page_obj.has_next()
+        'has_next': page_obj.has_next(),
+        'categories': list(categories)
     })
 
 def deals(request):

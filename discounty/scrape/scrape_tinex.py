@@ -71,8 +71,7 @@ def scrape_tinex():
         image_path = os.path.join(settings.MEDIA_ROOT, "markets", "tinex.jpg")
 
         if os.path.exists(image_path):
-            with open(image_path, "rb") as f:
-                market.image.save("tinex.jpg", File(f), save=False)
+            market.image.name = "markets/tinex.jpg"
 
         market.save()
 

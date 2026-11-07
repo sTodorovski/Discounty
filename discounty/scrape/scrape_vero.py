@@ -58,8 +58,7 @@ def scrape_vero():
         image_path = os.path.join(settings.MEDIA_ROOT, "markets", "vero.jpg")
 
         if os.path.exists(image_path):
-            with open(image_path, "rb") as f:
-                market.image.save("vero.jpg", File(f), save=False)
+            market.image.name = "markets/vero.jpg"
 
         market.save()
 
